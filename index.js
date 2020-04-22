@@ -14,7 +14,7 @@ function tonifyPhrase(phrase) {
   var words = splitPhraseIntoWords(phrase);
   var tonifiedWords = words.map(tonifyWord);
 
-  return tonifiedWords.join(' ');
+  return tonifiedWords.join('');
 }
 
 /**
@@ -22,6 +22,10 @@ function tonifyPhrase(phrase) {
  * @return {string}
  */
 function tonifyWord(word) {
+  if (/^\s+$/.test(word)) {
+    return word;
+  }
+
   var tone = getTone(word);
   var ending = getEnding(word);
 
@@ -100,7 +104,7 @@ function stripToneNumber(word) {
  * @return {array}
  */
 function splitPhraseIntoWords(phrase) {
-  return phrase.split(' ');
+  return phrase.split(/(\s+)/g);
 }
 
 /**
