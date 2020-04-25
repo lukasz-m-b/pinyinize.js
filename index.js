@@ -139,7 +139,7 @@ function getEnding(word) {
 }
 
 function convertSlashMarksToNumberMarks(phrase) {
-  const slashToneMarksRegex = /[a-zA-z](--|\\\/|\\|\/)(?:\s|$)?/g;
+  const slashToneMarksRegex = /[a-zA-z](--|\\\/|\\|\/)(?:\s|\.|\,|\?|\!|\:|\;|$)?/g;
 
   const slashToNumberMap = {
     '--': 1,

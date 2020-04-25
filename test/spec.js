@@ -231,5 +231,27 @@ describe('tonify', function() {
     it('should convert slash tone marks', function() {
       expect(tonify('ma-- ma/ ma\\/ ma\\, ma1 ma2 ma3 ma4 ma')).to.equal('mā má mǎ mà, mā má mǎ mà ma');
     });
+
+    describe('whitespace and punctuation handling', function() {
+      it('line end', function() {
+        expect(tonify('luo-- luo/ luo\\/\nluo\\')).to.equal('luō luó luǒ\nluò');
+      });
+
+      it('multiple line ends', function() {
+        expect(tonify('luo-- luo/ luo\\/\n\nluo\\')).to.equal('luō luó luǒ\n\nluò');
+      });
+
+      it('multiple spaces', function() {
+        expect(tonify('luo-- luo/ luo\\/   luo\\')).to.equal('luō luó luǒ   luò');
+      });
+
+      it('tabs', function() {
+        expect(tonify('luo-- luo/ luo\\/\t\tluo\\')).to.equal('luō luó luǒ\t\tluò');
+      });
+
+      it('punctuation', function() {
+        expect(tonify('luo--. luo/, luo\\/! luo//? ma--: ma//;')).to.equal('luō. luó, luǒ! luò? mā: má;');
+      });
+    });
   });
 });
