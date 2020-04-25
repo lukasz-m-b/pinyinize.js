@@ -4,13 +4,19 @@ var lettersToTonify = require('./lib/letters-to-tonify');
 var toneMap = require('./lib/tone-map');
 var toneNumbers = [1, 2, 3, 4];
 
-module.exports = tonifyPhrase;
+module.exports = { tonify };
 
 /**
  * @param {string} phrase
  * @return {string}
  */
-function tonifyPhrase(phrase) {
+function tonify(phrase, options) {
+  options = _.defaults(options, { allowSlashToneMarks: true })
+
+  if (options.allowSlashToneMarks) {
+    phrase = convertSlashMarksToNumberMarks(phrase);
+  }
+
   var words = splitPhraseIntoWords(phrase);
   var tonifiedWords = words.map(tonifyWord);
 
@@ -22,7 +28,7 @@ function tonifyPhrase(phrase) {
  * @return {string}
  */
 function tonifyWord(word) {
-  if (/^\s+$/.test(word)) {
+  if (/^[\s,.?!:;]+$/.test(word)) {
     return word;
   }
 
@@ -104,7 +110,7 @@ function stripToneNumber(word) {
  * @return {array}
  */
 function splitPhraseIntoWords(phrase) {
-  return phrase.split(/(\s+)/g);
+  return phrase.split(/([\s,.?!:;]+)/g);
 }
 
 /**
@@ -130,4 +136,25 @@ function getEnding(word) {
   });
 
   return ending;
+}
+
+function convertSlashMarksToNumberMarks(phrase) {
+  const slashToneMarksRegex = /[a-zA-z](--|\\\/|\\|\/)(?:\s|$)?/g;
+
+  const slashToNumberMap = {
+    '--': 1,
+    '/': 2,
+    '\\/': 3,
+    '\\': 4
+  };
+
+  const phraseWithNumberToneMarks = phrase
+    .replace(slashToneMarksRegex, (...[fullMatch, slashMark]) => {
+      const before = fullMatch.slice(0, 1);
+      const after = fullMatch.slice(slashMark.length + 1);
+
+      return before + slashToNumberMap[slashMark] + after;
+    });
+
+  return phraseWithNumberToneMarks;
 }

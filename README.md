@@ -15,9 +15,12 @@ $ npm install pinyinize --save
 ## Usage
 
 ```javascript
-var pinyinize = require('pinyinize');
+var { tonify } = require('pinyinize');
 
-pinyinize('ma1 ma2 ma3 ma4 ma'); // returns 'mā má mǎ mà ma'
+tonify('ma1 ma2 ma3 ma4 ma'); // returns 'mā má mǎ mà ma'
+
+// a custom system of slash tone marks (arguably more intuitive and readable than numbers) is also allowed
+tonify('ma-- ma/ ma\\/ ma\\, ma1 ma2 ma3 ma4 ma'); // returns 'mā má mǎ mà, mā má mǎ mà ma'
 ```
 
 ## Tests
