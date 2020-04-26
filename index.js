@@ -1,8 +1,8 @@
-var _ = require('lodash');
-var endings = require('./lib/endings');
-var lettersToTonify = require('./lib/letters-to-tonify');
-var toneMap = require('./lib/tone-map');
-var toneNumbers = [1, 2, 3, 4];
+const _ = require('lodash');
+const endings = require('./lib/endings');
+const lettersToTonify = require('./lib/letters-to-tonify');
+const toneMap = require('./lib/tone-map');
+const toneNumbers = [1, 2, 3, 4];
 
 module.exports = { tonify };
 
@@ -17,8 +17,8 @@ function tonify(phrase, options) {
     phrase = convertSlashMarksToNumberMarks(phrase);
   }
 
-  var words = splitPhraseIntoWords(phrase);
-  var tonifiedWords = words.map(tonifyWord);
+  const words = splitPhraseIntoWords(phrase);
+  const tonifiedWords = words.map(tonifyWord);
 
   return tonifiedWords.join('');
 }
@@ -32,8 +32,8 @@ function tonifyWord(word) {
     return word;
   }
 
-  var tone = getTone(word);
-  var ending = getEnding(word);
+  let tone = getTone(word);
+  let ending = getEnding(word);
 
   if (!tone || !ending) {
     return getTonelessFallback(word);
@@ -45,8 +45,8 @@ function tonifyWord(word) {
     ending = ending.replace('u', 'ü');
   }
 
-  var tonifiedEnding = tonifyEnding(ending, tone);
-  var tonifiedWord = word.replace(ending, tonifiedEnding);
+  const tonifiedEnding = tonifyEnding(ending, tone);
+  const tonifiedWord = word.replace(ending, tonifiedEnding);
 
   return stripToneNumber(tonifiedWord);
 }
@@ -56,7 +56,7 @@ function tonifyWord(word) {
  * @return {string}
  */
 function getTonelessFallback(word) {
-  var fallbackIoMap = {
+  const fallbackIoMap = {
     lv: 'lü',
     nv: 'nü',
     lue: 'lüe',
@@ -72,7 +72,7 @@ function getTonelessFallback(word) {
  * @return {string}
  */
 function tonifyLetter(letter, tone) {
-  var keys = letter + '.' + tone;
+  const keys = letter + '.' + tone;
   return _.get(toneMap, keys, letter);
 }
 
@@ -82,7 +82,7 @@ function tonifyLetter(letter, tone) {
  * @return {string}
  */
 function tonifyEnding(ending, tone) {
-  var letter;
+  let letter;
 
   _.forEach(lettersToTonify, function(letterAndPattern) {
     if (!letter && ending.match(letterAndPattern.pattern)) {
@@ -118,7 +118,7 @@ function splitPhraseIntoWords(phrase) {
  * @return {number|null}
  */
 function getTone(word) {
-  var lastCharacter = parseInt(_.last(word), 10);
+  const lastCharacter = parseInt(_.last(word), 10);
   return _.includes(toneNumbers, lastCharacter) ? lastCharacter : null;
 }
 
@@ -127,7 +127,7 @@ function getTone(word) {
  * @return {string|null}
  */
 function getEnding(word) {
-  var ending = null;
+  let ending = null;
 
   _.forEach(endings, function(pattern, plainEnding) {
     if (word.match(pattern)) {
@@ -138,6 +138,10 @@ function getEnding(word) {
   return ending;
 }
 
+/**
+ * @param {string} phrase
+ * @return {string}
+ */
 function convertSlashMarksToNumberMarks(phrase) {
   const slashToneMarksRegex = /[a-zA-Z](--|\\\/|\\|\/)(?:\s|\.|,|\?|!|:|;|$)?/g;
 

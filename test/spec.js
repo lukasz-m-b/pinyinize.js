@@ -1,6 +1,6 @@
-var expect = require('chai').expect;
-var { tonify } = require('../index');
-var { describe, it } = require('mocha');
+const expect = require('chai').expect;
+const { tonify } = require('../index');
+const { describe, it } = require('mocha');
 
 describe('tonify', function() {
   describe('number tone marks', function() {

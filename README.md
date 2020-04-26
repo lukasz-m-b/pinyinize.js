@@ -15,7 +15,7 @@ $ npm install pinyinize --save
 ## Usage
 
 ```javascript
-var { tonify } = require('pinyinize');
+const { tonify } = require('pinyinize');
 
 tonify('ma1 ma2 ma3 ma4 ma'); // returns 'mā má mǎ mà ma'
 
