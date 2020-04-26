@@ -253,5 +253,11 @@ describe('tonify', function() {
         expect(tonify('luo--. luo/, luo\\/! luo\\? ma--: ma/;')).to.equal('luō. luó, luǒ! luò? mā: má;');
       });
     });
+
+    describe('turning off slash tone marks', function() {
+      it('allowSlashToneMarks: false', function() {
+        expect(tonify('luo-- luo/ luo\\/\nluo\\ ma1', { allowSlashToneMarks: false })).to.equal('luo-- luo/ luo\\/\nluo\\ mā');
+      });
+    });
   });
 });

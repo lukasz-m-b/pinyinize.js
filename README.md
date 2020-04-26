@@ -21,6 +21,9 @@ tonify('ma1 ma2 ma3 ma4 ma'); // returns 'mā má mǎ mà ma'
 
 // a custom system of slash tone marks (arguably more intuitive and readable than numbers) is also allowed
 tonify('ma-- ma/ ma\\/ ma\\, ma1 ma2 ma3 ma4 ma'); // returns 'mā má mǎ mà, mā má mǎ mà ma'
+
+// to turn slash marks off
+tonify('ma-- ma1', { allowSlashToneMarks: false }) // ma-- mā
 ```
 
 ## Tests
