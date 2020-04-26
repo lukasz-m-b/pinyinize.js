@@ -250,7 +250,7 @@ describe('tonify', function() {
       });
 
       it('punctuation', function() {
-        expect(tonify('luo--. luo/, luo\\/! luo//? ma--: ma//;')).to.equal('luō. luó, luǒ! luò? mā: má;');
+        expect(tonify('luo--. luo/, luo\\/! luo\\? ma--: ma/;')).to.equal('luō. luó, luǒ! luò? mā: má;');
       });
     });
   });
