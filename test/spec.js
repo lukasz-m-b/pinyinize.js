@@ -225,8 +225,14 @@ describe('tonify', function() {
         expect(tonify('luo1. luo2, luo3! luo4? ma1: ma2;')).to.equal('luō. luó, luǒ! luò? mā: má;');
       });
     });
-  });
 
+    describe('uppercase handling', function() {
+      it('luo', function() {
+        expect(tonify('luo1 LUO1 LUO2 LUO3\nLUO4')).to.equal('luō LUŌ LUÓ LUǑ\nLUÒ');
+      });
+    });
+  });
+  
   describe('slash tone marks', function() {
     it('should convert slash tone marks', function() {
       expect(tonify('ma-- ma/ ma\\/ ma\\, ma1 ma2 ma3 ma4 ma')).to.equal('mā má mǎ mà, mā má mǎ mà ma');

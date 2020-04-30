@@ -8,6 +8,7 @@ module.exports = { tonify };
 
 /**
  * @param {string} phrase
+ * @param {object} options
  * @return {string}
  */
 function tonify(phrase, options) {
