@@ -3,7 +3,7 @@ const { tonify } = require('../index');
 const { describe, it } = require('mocha');
 
 describe('tonify', function() {
-  describe('number tone marks', function() {
+  describe.only('number tone marks', function() {
     it('should convert a1 a2 a3 a4 a', function() {
       expect(tonify('a1 a2 a3 a4 a')).to.equal('ā á ǎ à a');
     });
