@@ -3,7 +3,7 @@ const { tonify } = require('../index');
 const { describe, it } = require('mocha');
 
 describe('tonify', function() {
-  describe.only('number tone marks', function() {
+  describe('number tone marks', function() {
     it('should convert a1 a2 a3 a4 a', function() {
       expect(tonify('a1 a2 a3 a4 a')).to.equal('ā á ǎ à a');
     });
@@ -200,10 +200,6 @@ describe('tonify', function() {
       expect(tonify('nü1 nü2 nü3 nü4 nü')).to.equal('nǖ nǘ nǚ nǜ nü');
     });
 
-    it('should not convert non-pinyin words', function() {
-      expect(tonify('foo1 dian2 3')).to.equal('foo1 dián 3');
-    });
-
     describe('whitespace and punctuation handling', function() {
       it('line end', function() {
         expect(tonify('luo1 luo2 luo3\nluo4')).to.equal('luō luó luǒ\nluò');
@@ -260,10 +256,10 @@ describe('tonify', function() {
       });
     });
 
-    describe('turning off slash tone marks', function() {
-      it('allowSlashToneMarks: false', function() {
-        expect(tonify('luo-- luo/ luo\\/\nluo\\ ma1', { allowSlashToneMarks: false })).to.equal('luo-- luo/ luo\\/\nluo\\ mā');
-      });
-    });
+    // describe('turning off slash tone marks', function() {
+    //   it('allowSlashToneMarks: false', function() {
+    //     expect(tonify('luo-- luo/ luo\\/\nluo\\ ma1', { allowSlashToneMarks: false })).to.equal('luo-- luo/ luo\\/\nluo\\ mā');
+    //   });
+    // });
   });
 });
