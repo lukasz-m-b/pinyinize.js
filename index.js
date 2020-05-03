@@ -6,6 +6,7 @@ const toneMap = require('./lib/tone-map');
 
 module.exports = { tonify };
 
+const initials = 'bcdfghjklmnpqrstwxyz'.split('');
 const endingRegex = makeEndingRegex();
 
 /**
@@ -21,7 +22,7 @@ function tonify(text, options) {
   // }
 
   const tonifiedText = text
-    .replace(endingRegex, (...[, start, ending, toneMark, whitespace]) => {
+    .replace(endingRegex, (...[fullMatch, start, ending, toneMark, whitespace]) => {
       // const before = fullMatch.slice(0, 1);
       // const after = fullMatch.slice(slashMark.length + 1);
 
@@ -35,13 +36,22 @@ function tonify(text, options) {
 
       const toneDiacriticPosition = endingInfos[ending];
 
+      //if(!toneMark)
+      console.log('---', start)
+
+      // console.log('---', ending)
+
+      if (start.length > 1 && !['sh', 'ch', 'zh'].includes(start)) {
+        return fullMatch;
+      }
+
       if (ending === 'v') {
         ending = 'ü';
-      } else if (ending === 'ue') {
+      } else if (ending === 'ue' && start !== 'x') {
         ending = 'üe';
-      } 
+      }
 
-      // console.log(toneDiacriticPosition, ending[toneDiacriticPosition])
+      console.log(toneMark, ending, ending[toneDiacriticPosition], JSON.stringify(whitespace))
 
       const diacritic = toneMap[
         ending[toneDiacriticPosition]
@@ -49,10 +59,13 @@ function tonify(text, options) {
         toneMark
       ];
 
-      const endingWithDiacritic =
+      const endingWithDiacritic = toneMark
+        ?
         ending.slice(0, toneDiacriticPosition) +
         diacritic +
-        ending.slice(toneDiacriticPosition + 1);
+        ending.slice(toneDiacriticPosition + 1)
+        :
+        ending;
 
       const tonifiedSyllable = start + endingWithDiacritic + (whitespace || '');
 
@@ -73,9 +86,13 @@ function makeEndingRegex() {
     ...lowercaseEndings.sort((a, b) => b.length - a.length),
     ...uppercasendings.sort((a, b) => b.length - a.length),
   ];
-  const syllableStartPattern = '([bcdfghjklmnpqrstwxyzBCDFGHJKLMNPQRSTWXYZ]?)';
+  const syllableStartPattern = 
+    '([' + 
+    initials.join('') + 
+    initials.map(i => i.toUpperCase()).join('') + 
+    ']{0,2})';
   const syllableEndPattern = '(' + orderedEndings.join('|') + ')';
-  const toneMarkPattern = '([1-4])'
+  const toneMarkPattern = '([1-4]|--|\\\/|\\|\/)?'
   const whitespaceAfterSyllablePattern = '(\\s|\\.|,|\\?|!|:|;|$)?';
   const pattern =
     syllableStartPattern +
@@ -87,121 +104,6 @@ function makeEndingRegex() {
 
   return new RegExp(pattern, 'g');
 }
-
-// /** (^|\s)?
-//  * @param {string} word
-//  * @return {string}
-//  */
-// function tonifyWord(word) {
-//   if (/^[\s,.?!:;]+$/.test(word)) {
-//     return word;
-//   }
-
-//   let tone = getTone(word);
-//   let ending = getEnding(word);
-
-//   if (!tone || !ending) {
-//     return getTonelessFallback(word);
-//   }
-
-//   // TODO: Refactor this exception.
-//   if (_.includes(['nue', 'lue'], stripToneNumber(word))) {
-//     word = word.replace('u', 'ü');
-//     ending = ending.replace('u', 'ü');
-//   }
-
-//   const tonifiedEnding = tonifyEnding(ending, tone);
-//   const tonifiedWord = word.replace(ending, tonifiedEnding);
-
-//   return stripToneNumber(tonifiedWord);
-// }
-
-// /**
-//  * @param {string} word
-//  * @return {string}
-//  */
-// function getTonelessFallback(word) {
-//   const fallbackIoMap = {
-//     lv: 'lü',
-//     nv: 'nü',
-//     lue: 'lüe',
-//     nue: 'nüe'
-//   };
-
-//   return _.get(fallbackIoMap, word, word);
-// }
-
-// /**
-//  * @param {string} letter
-//  * @param {number} tone
-//  * @return {string}
-//  */
-// function tonifyLetter(letter, tone) {
-//   const keys = letter + '.' + tone;
-//   return _.get(toneMap, keys, letter);
-// }
-
-// /**
-//  * @param {string} ending
-//  * @param {number} tone
-//  * @return {string}
-//  */
-// function tonifyEnding(ending, tone) {
-//   let letter;
-
-//   _.forEach(lettersToTonify, function(letterAndPattern) {
-//     if (!letter && ending.match(letterAndPattern.pattern)) {
-//       letter = letterAndPattern.letter;
-//     }
-//   });
-
-//   if (!letter) {
-//     return ending;
-//   }
-
-//   return ending.replace(letter, tonifyLetter(letter, tone));
-// }
-
-// /**
-//  * @param {string} word
-//  * @return {string}
-//  */
-// function stripToneNumber(word) {
-//   return _.trim(word, toneNumbers);
-// }
-
-// /**
-//  * @param {string} phrase
-//  * @return {array}
-//  */
-// function splitPhraseIntoWords(phrase) {
-//   return phrase.split(/([\s,.?!:;]+)/g);
-// }
-
-// /**
-//  * @param {string} word
-//  * @return {number|null}
-//  */
-// function getTone(word) {
-//   const lastCharacter = parseInt(_.last(word), 10);
-//   return _.includes(toneNumbers, lastCharacter) ? lastCharacter : null;
-// }
-
-// /**
-//  * @param {string} word
-//  * @return {string|null}
-//  */
-// function getEnding(word) {
-//   let ending = null;
-
-//   _.forEach(endings, function(pattern, plainEnding) {
-//     if (word.match(pattern)) {
-//       ending = plainEnding;
-//     }
-//   });
-
-//   return ending;
-// }
 
 // /**
 //  * @param {string} phrase
