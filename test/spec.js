@@ -1,6 +1,12 @@
 const expect = require('chai').expect;
 const { describe, it } = require('mocha');
-const { tonify } = require('./../dist/pinyinize.min.js');
+// import { expect } from 'chai';
+// import { describe, it } from 'mocha';
+console.log(require('./../out/index.js'))
+const { tonify } = require('./../out/index.js');
+// const { tonify } = require('../index');
+// import { tonify } from '../index.js'
+
 
 describe('tonify', function() {
   describe('number tone marks', function() {
